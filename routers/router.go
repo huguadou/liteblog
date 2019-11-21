@@ -12,4 +12,8 @@ func init() {
 	beego.Include(&controllers.IndexController{})
 	beego.ErrorController(&controllers.ErrorController{})
 	beego.Include(&controllers.IndexController{})
+	beego.Include(
+		&controllers.IndexController{},
+		&controllers.UserController{},
+	)
 }

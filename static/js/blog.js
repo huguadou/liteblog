@@ -161,3 +161,37 @@ layui.define(['element', 'form','laypage','jquery','laytpl'],function(exports){
   //输出test接口
   exports('blog', {}); 
 });  
+   // 
+    //登陆
+    form.on('submit(login)', function (fromdata) {
+      //发送ajax请求
+      sysn.post("/login", fromdata.field)
+           // 设置登陆成功回掉函数
+          .success(function (data) {
+              // 提示
+              layer.msg(data.msg);
+              // 后台如果返回有action ，就是跳转到新页面。
+              if (data.action) {
+                  setTimeout(function () {
+                      window.location.href = data.action;
+                  }, 300)
+              }
+          }).run();
+      return false;
+  });
+
+  //注册
+  form.on('submit(reg)', function (fromdata) {
+    sysn.post("/reg", fromdata.field)
+        .success(function (data) {
+            // 设置登陆成功回掉函数
+            layer.msg(data.msg);
+            // 后台如果返回有action ，就是跳转到新页面。
+            if (data.action) {
+                setTimeout(function () {
+                    window.location.href = data.action;
+                }, 300)
+            }
+        }).run();
+    return false;
+});

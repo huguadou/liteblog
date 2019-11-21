@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"beegoApi/models"
 	"log"
 
 	"github.com/astaxie/beego"
@@ -12,7 +13,12 @@ type NestPreparer interface {
 }
 type BaseController struct {
 	beego.Controller
+	IsLogin bool        //标识 用户是否登录
+	User    models.User //登录的用户
 }
+
+//定义session中的key
+const SESSION_USER_KEY = "SESSION_USER_KEY"
 
 func (ctx *BaseController) Prepare() {
 	log.Println("BaseController")
@@ -23,4 +29,16 @@ func (ctx *BaseController) Prepare() {
 	if ok {
 		app.NestPreparer()
 	}
+	//验证用户是否登录，判断session中是否存在用户，存在就已经登录，不存在就没有登录
+	ctx.IsLogin = false
+	tu := ctx.GetSession(SESSION_USER_KEY)
+	if tu != nil {
+		u, ok := tu.(models.User)
+		if ok {
+			ctx.User = u
+			ctx.Data["User"] = u
+			ctx.IsLogin = true
+		}
+	}
+	ctx.Data["IsLogin"] = ctx.IsLogin
 }
